@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chip-8</title>
+    <h2 id="heading" align=center>CHIP-8 EMULATOR IN JAVASCRIPT</h2>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="sweetalert"></script>
+    <script src="chip8.js"></script>
+    <script src="components/Memory.js"></script>
+    <script src="components/Input.js"></script>
+    <script src="components/Display.js"></script>
+    <script src="components/CPU.js"></script>
+    <script src="components/Assembler.js"></script>
+    <script src="chip8.test.js"></script>
+
+
+
+    <script>
+    	function tableCreate(){
+    		let rows =32;
+            let cols=64;
+            let table = document.getElementById('tbl');
+
+			/*for (let r = 0; r<rows; r++){
+                let row = table.insertRow(-1);
+  				for (let c = 0; c<cols; c++){
+                    let cell = row.insertCell(-1);
+    				cell.setAttribute('id', "cell"+r+"-"+c );
+
+  				}
+			}*/
+}
+    </script>
+
+    <script type="text/javascript">
+      function onLoad() {
+        window.chip = new chip8();
+      }
+
+
+    </script>
+
+
+    <script type="text/javascript">
+      function onSelection() {
+        const games = document.getElementById('game').files;
+        game = games[0];
+        chip.restart();
+        chip.loadProgram(game);
+      }
+    </script>
+
+
+    <script type="text/javascript">
+
+      function start() {
+        const games = document.getElementById('game').files;
+        if (games.length == 0) {
+          alert("Please Select A Game");
+          return;
+        }
+        chip.start();
+      }
+
+
+    </script>
+
+
+    <script type="text/javascript">
+
+      function pause() {
+        const games = document.getElementById('game').files;
+        if (games.length == 0) {
+          alert("No Game To Pause");
+          return;
+        }
+        chip.pause();
+      }
+
+    </script>
+
+
+    <script type="text/javascript">
+
+      function restart() {
+        const games = document.getElementById('game').files;
+        game = games[0];
+        if (games.length == 0) {
+          alert("No Game To Restart");
+          return;
+        }
+       // chip.pause();
+        chip.restart();
+        chip.loadProgram(game);
+        chip.start();
+      }
+    </script>
+
+
+    <script type="text/javascript">
+      function forward() {
+        const games = document.getElementById('game').files;
+        game = games[0];
+        if (games.length == 0) {
+          alert("No Game To Step Forward");
+          return;
+        }
+        chip.stepForward();
+        //alert("placeholder");
+      }
+    </script>
+
+
+    <script type="text/javascript">
+      function backward() {
+        //alert("placeholder");
+        const games = document.getElementById('game').files;
+        game = games[0];
+        if (games.length == 0) {
+          alert("No Game To Step Backward");
+          return;
+        }
+        chip.stepBackward();
+      }
+    </script>
+
+    <script type="text/javascript">
+      function help() {
+        var message = "INSTRUCTIONS: \n\nSTART: starts a chip8 ROM selected via 'Choose File'\n \
+        PAUSE: pauses the program\n RESTART: restarts the program\n \
+        STEP BACKWARD: reverses the program into its previous states opcode by opcode\n\
+        STEP FORWARD: progresses the program opcode by opcode";
+        Swal.fire({
+          title: message,
+          width: 600,
+          padding: '3em',
+          backdrop: `
+            rgba(0,0,123,0.4)
+            url("nyan-cat.gif")
+            center left
+            no-repeat
+          `
+        })
+      }
+    </script>
+</head>
+
+
+<body onload="tableCreate(); onLoad();">
+  <!---
+<input type="file" id="game" name="myFile" oninput="onSelection();">
+<button id="start" onclick="start()">START</button>
+<button id="pause" onclick="pause()">PAUSE</button>
+<button id="restart" onclick="restart()">RESTART</button>
+<button id="backward" onclick="backward()">STEP BACKWARD</button>
+<button id="forward" onclick="forward()">STEP FORWARD</button>
+-->
+
+
+
+
+
+<!--
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Chip-8</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">File <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li oninput="load();"><input type="file" on /></li>
+                    <li><a href="#">Reset Place Holder</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+-->
+
+<div id="tblHold">
+  <!--<table id="tbl"></table>-->
+    <canvas id = "tbl" height="320px" width="640px"> </canvas>
+
+  <div style="text-align:center;">
+    <input type="file" id="game" name="myFile" oninput="onSelection();">
+    <button id="start" onclick="start()">START</button>
+    <button id="pause" onclick="pause()">PAUSE</button>
+    <button id="restart" onclick="restart()">RESTART</button>
+    <button id="backward" onclick="backward()">STEP BACKWARD</button>
+    <button id="forward" onclick="forward()">STEP FORWARD</button>
+    <button id="help" onclick="help()">HELP</button>
+  </div>
+</div>
+
+
+<div id="hold">
+
+    <div id="spacer"><p></p></div>
+    <div id="log"><p id="op">Opcode Log</p><p id = "inLog"></p></div>
+    <div id="con">
+        <table>
+            <tr>
+                <th colspan="2">Registers</th>
+                <th>Counters and Pointers</th>
+            </tr>
+            <tr>
+                <td><p id="0">V0 =</p></td>
+                <td><p id="8">V8 =</p></td>
+                <td><p id="I">Address I =</p></td>
+            </tr>
+            <tr>
+                <td><p id="1">V1 =</p></td>
+                <td><p id="9">V9 =</p></td>
+                <td><p id="PC">Program Counter =</p></td>
+            </tr>
+            <tr>
+                <td><p id="2">V2 = </p></td>
+                <td><p id="A">VA =</p></td>
+                <td><p id="S">Stack Pointer =</p></td>
+            </tr>
+            <tr>
+                <td><p id="3">V3 =</p></td>
+                <td><p id="B">VB =</p></td>
+                <td><p id="sound">Sound Timer =</p></td>
+            </tr>
+            <tr>
+                <td><p id="4">V4 =</p></td>
+                <td><p id="C">V5 =</p></td>
+                <td><p id="delay">Delay Timer = </p></td>
+            </tr>
+            <tr>
+                <td><p id="5">V5 =</p></td>
+                <td><p id="D">VD =</p></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><p id="6">V6 =</p></td>
+                <td><p id="E">VE =</p></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><p id="7">V7 =</p></td>
+                <td><p id="F">VF =</p></td>
+                <td></td>
+            </tr>
+
+
+        </table>
+    </div>
+    <div id="mem"><p id="memory">Memory</p><p id="inMem"></p></div>
+</div>
+</body>
+</html>
