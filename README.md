@@ -33,7 +33,7 @@ This project consists of building a **chip8 emulator** and a **visualizer** that
 3. **COUNTERS & POINTERS:** Displays the values of the counters and pointers in real time.
 4. **MEMORY:** Displays the contents of memory in real time.
 
-##GameInputs
+### GameInputs
 1.  **1**
 2.  **2**
 3.  **3**
